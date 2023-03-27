@@ -69,150 +69,72 @@ function detectEngine() {
     var search = document.getElementById("search");
     var bookmark = document.getElementById("bookmark");
     var weather = document.getElementById("weather");
-    var theme = document.getElementById("theme");
     var menuItems = document.querySelectorAll(".menu__button");
     var form = document.getElementById("form");
 
     const engine = [
         {
             name: "google",
-            regex: new RegExp(/@g\s|\s@g|@google\s/ig),
+            regex: /@g\s|\s@g|@google\s/ig,
             url: "http://www.google.com/search",
             parameter: "q"
         },{
             name: "duckduckgo",
-            regex: new RegExp(/@d\s|\s@d|@ddg\s|@duck\s/ig),
+            regex: /@d\s|\s@d|@ddg\s|@duck\s/ig,
             url: "https://duckduckgo.com/?t=ffab&q=",
             parameter: "q"
         },{
             name: "bing",
-            regex: new RegExp(/@b\s|\s@b|@bing\s/ig),
+            regex: /@b\s|\s@b|@bing\s/ig,
             url: "https://www.bing.com/search?q=",
             parameter: "q"
         },{
             name: "wikipedia",
-            regex: new RegExp(/@w\s|\s@w|@wiki\s|@wikipedia\s/ig),
+            regex: /@w\s|\s@w|@wiki\s|@wikipedia\s/ig,
             url: "http://www.wikipedia.org/search-redirect.php",
             parameter: "search"
         },{
             name: "youtube",
-            regex: new RegExp(/@y\s|\s@y|@youtube\s|@yt\s/ig),
+            regex: /@y\s|\s@y|@youtube\s|@yt\s/ig,
             url: "https://www.youtube.com/results?search_query=",
             parameter: "q"
         },{
             name: "mdn",
-            regex: new RegExp(/@mdn\s|\s@mdn/ig),
+            regex: /@mdn\s|\s@mdn/ig,
             url: "https://developer.mozilla.org/en-US/search?q=",
             parameter: "q"
         },{
             name: "stackoverflow",
-            regex: new RegExp(/@so\s|\s@so|@stack\s/ig),
+            regex: /@so\s|\s@so|@stack\s/ig,
             url: "https://stackoverflow.com/search?q=",
             parameter: "q"
         },{
             name: "dexonline",
-            regex: new RegExp(/@dex\s|\s@dex/ig),
-            url: "https://dexonline.ro/definitie/",
-            parameter: ""
+            regex: /@dex\s|\s@dex/ig,
+            url: "https://dexonline.ro/search.php",
+            parameter: "cuv"
         }
     ]
 
-    const bing = new RegExp(/@b\s|\s@b|@bing\s/ig);
-    const wikipedia = new RegExp(/@w\s|\s@w|@wiki\s|@wikipedia\s/ig);
-    const youtube = new RegExp(/@y\s|\s@y|@youtube\s|@yt\s/ig);
-    const mdn = new RegExp(/@mdn\s|\s@mdn/ig);
-    const so = new RegExp(/@so\s|\s@so|@stack\s/ig);
-    const dex = new RegExp(/@dex\s|\s@dex/ig);
-    const bookmarktag = new RegExp(/!b\s|\s!b/ig);
-    const weathertag = new RegExp(/!w/ig);
-    const themetag = new RegExp(/!t/ig);
+    const bookmarktag = /!b\s|\s!b/ig;
+    const weathertag = /!w/ig;
 
-    let googleHandler = engine[0].regex.test(search.value);
-    let duckduckgoHandler = engine[1].regex.test(search.value);
-    let bingHandler = engine[2].regex.test(search.value);
-    let wikipediaHandler = engine[3].regex.test(search.value);
-    let youtubeHandler = youtube.test(search.value);
-    let mdnHandler = mdn.test(search.value);
-    let soHandler = so.test(search.value);
-    let dexHandler = dex.test(search.value);
-
-    let bookmarkHandler = bookmarktag.test(search.value);
     let weatherHandler = weathertag.test(search.value);
-    var lastHandler = bingHandler;
 
     search.addEventListener("keyup", function(event) {
-        switch (true) {
-            case googleHandler:
-                form.action = engine[0].url;
-                search.setAttribute("name", engine[0].parameter);
-                this.value = this.value.replace(engine[0].regex, "");
-                search.placeholder = "search " + engine[0].name;
-                lastHandler = googleHandler;
+        for (let i = 0; i < engine.length; i++) {
+            if (engine[i].regex.test(search.value)) {
+                form.action = engine[i].url;
+                search.setAttribute("name", engine[i].parameter);
+                this.value = this.value.replace(engine[i].regex, "");
+                search.placeholder = "search " + engine[i].name;
                 searchEngine();
-                break;
-            case duckduckgoHandler:
-                form.action = engine[1].url;
-                search.setAttribute("name", engine[1].parameter);
-                this.value = this.value.replace(engine[1].regex, "");
-                search.placeholder = "search " + engine[1].name;
-                lastHandler = duckduckgoHandler;
-                searchEngine();
-                break;
-            case bingHandler:
-                form.action = engine[2].url;
-                search.setAttribute("name", engine[2].parameter);
-                this.value = this.value.replace(engine[2].regex, "");
-                search.placeholder = "search " + engine[2].name;
-                lastHandler = bingHandler;
-                searchEngine();
-                break;
-            case wikipediaHandler:
-                form.action = engine[3].url;
-                search.setAttribute("name", engine[3].parameter);
-                this.value = this.value.replace(engine[3].regex, "");
-                search.placeholder = "search " + engine[3].name;
-                lastHandler = wikipediaHandler;
-                searchEngine();
-                break;
-            case youtubeHandler:
-                form.action = engine[3].url;
-                search.setAttribute("name", engine[4].parameter);
-                this.value = this.value.replace(engine[4].regex, "");
-                search.placeholder = "search " + engine[4].name;
-                lastHandler = youtubeHandler;
-                searchEngine();
-                break;
-            case mdnHandler:
-                form.action = engine[5].url;
-                search.setAttribute("name", engine[5].parameter);
-                this.value = this.value.replace(engine[5].regex, "");
-                search.placeholder = "search " + engine[5].name;
-                lastHandler = mdnHandler;
-                searchEngine();
-                break;
-            case soHandler:
-                form.action = engine[6].url;
-                search.setAttribute("name", engine[6].parameter);
-                this.value = this.value.replace(engine[6].regex, "");
-                search.placeholder = "search " + engine[6].name;
-                lastHandler = stackoverflowHandler;
-                searchEngine();
-                break;
-            case dexHandler:
-                form.action = engine[7].url;
-                search.setAttribute("name", engine[7].parameter);
-                this.value = this.value.replace(engine[7].regex, "");
-                search.placeholder = "search " + engine[7].name;
-                lastHandler = dexHandler;
-                searchEngine();
-                break;
-            case bookmarkHandler:
+            } else if (bookmarktag.test(search.value)) {
                 form.action = "javascript:void(0);";
                 this.value = this.value.replace(bookmarktag, "");
                 search.placeholder = "search bookmarks";
-                lastHandler = bookmarkHandler;
                 bookmarkEngine();
-                break;
+            }
         }
         function bookmarkEngine() {
             bookmark.style.opacity = "100%";
@@ -224,30 +146,7 @@ function detectEngine() {
                     menuItems[i].classList.remove("selected");
                 }
             }
-
-        }
-        function searchEngine() {
-            bookmark.style.opacity = "0";
-            bookmark.style.display = "none";
-            for (var i = 0; i < menuItems.length; i++) {
-                if (menuItems[i].value === "search") {
-                    menuItems[i].classList.add("selected");
-                } else {
-                    menuItems[i].classList.remove("selected");
-                }
-            }
-        }
-
-        if (weatherHandler === true) {
-            weather.style.opacity = "100%";
-            weather.style.display = "block";
-        } else {
-            weather.style.opacity = "0";
-            weather.style.display = "none";
-        } 
-        if (lastHandler === bookmarkHandler) {
-            console.log(lastHandler);
-            const query = tag.toLowerCase();
+            const query = search.value.toLowerCase();
             const bookmarks = document.getElementsByClassName("bookmark__folder-item");
             for (let i = 0; i < bookmarks.length; i++) {
                 const link = bookmarks[i];
@@ -262,38 +161,27 @@ function detectEngine() {
                 }
             }
         }
+        function searchEngine() {
+            bookmark.style.opacity = "0";
+            bookmark.style.display = "none";
+            for (var i = 0; i < menuItems.length; i++) {
+                if (menuItems[i].value === "search") {
+                    menuItems[i].classList.add("selected");
+                } else {
+                    menuItems[i].classList.remove("selected");
+                }
+            }
+        }
+        if (weatherHandler === true) {
+            weather.style.opacity = "100%";
+            weather.style.display = "block";
+        } else {
+            weather.style.opacity = "0";
+            weather.style.display = "none";
+        } 
     });
 }
 
-function goDark() {
-    var body = document.querySelector("body");
-    body.className = "";
-}
-function goDrops() {
-    var body = document.querySelector("body");
-    body.className = "";
-    body.classList.add("theme-drops");
-}
-function goLavender() {
-    var body = document.querySelector("body");
-    body.className = "";
-    body.classList.add("theme-lavender");
-}
-function goMint() {
-    var body = document.querySelector("body");
-    body.className = "";
-    body.classList.add("theme-mint");
-}
-function goConifer() {
-    var body = document.querySelector("body");
-    body.className = "";
-    body.classList.add("theme-conifer");
-}
-function goBrass() {
-    var body = document.querySelector("body");
-    body.className = "";
-    body.classList.add("theme-brass");
-}
 document.addEventListener('DOMContentLoaded', function() {
     menuStyle();
   });
